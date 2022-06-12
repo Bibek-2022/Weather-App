@@ -1,39 +1,45 @@
-import axios from "axios";
-import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import { makeStyles } from "@material-ui/core/styles";
+import CardContent from "@material-ui/core/CardContent";
+import TextField from "@material-ui/core/TextField";
+import WeatherAPI from "./weatherAPI";
+import bgImg from "./images/bg-img.jpg";
 
-const api = {
-  key: "6fd10b9fc26cfbb050e211e03946f55c",
-  base: "https://api.openweathermap.org/data/2.5/",
-};
+const style = makeStyles((theme) => ({
+  root: {
+    marginTop: 50,
+    display: "flex",
+    width: 550,
+    height: 250,
+  },
+  cardcss: {
+    backgroundImage: "url(" + bgImg + ")",
+    backgroundPosition: "center",
+  },
+}));
+
 function App() {
-  const [query, setQuery] = useState("");
-  const [weather, setWeather] = useState({});
-  async function getUser() {
-    try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${api.key}`
-      );
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setQuery(value);
-  };
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-    getUser();
-    setWeather(query);
-    setQuery("");
-  };
+  const classes = style();
+  const [city, setCity] = React.useState(null);
 
-  return;
-  <div>
-    <TextField id="standard-basic" label="Standard" variant="standard" />
-  </div>;
+  return (
+    <Grid className={classes.root} alignItems="center" container justify>
+      <Card className={classes.cardcss}>
+        <CardContent>
+          <TextField
+            autoFocus
+            label="City Name"
+            onChange={(e) => {
+              setCity(e.target.value);
+            }}
+          />
+          <WeatherAPI city={city} />
+        </CardContent>
+      </Card>
+    </Grid>
+  );
 }
 
 export default App;
