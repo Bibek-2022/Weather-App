@@ -1,84 +1,39 @@
+import axios from "axios";
 import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+
 const api = {
-  key: "640cde624e5a906ff55da347df7e43ab",
+  key: "6fd10b9fc26cfbb050e211e03946f55c",
   base: "https://api.openweathermap.org/data/2.5/",
 };
 function App() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
-
-  const search = (evt) => {
-    fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.id}`)
-      .then((res) => res.json())
-      .then((result) => {
-        setWeather(result);
-        setQuery("");
-      });
+  async function getUser() {
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${api.key}`
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setQuery(value);
   };
-  const dateBuilder = (d) => {
-    let months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    let days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
-
-    return `${day} ${date} ${month} ${year}`;
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    getUser();
+    setWeather(query);
+    setQuery("");
   };
-  return (
-    <div className="App">
-      <main>
-        <div className="search-box">
-          <input
-            type="text"
-            className="search-bar"
-            placeholder="Search..."
-            onChange={(e) => setQuery(e.target.value)}
-            value={query}
-            onKeyPress={search}
-          />
-        </div>
-        {weather.main ? (
-          <div>
-            <div className="location-box"></div>
-            <div className="location">
-              {weather.name},{weather.sys.country}
-            </div>
-            <div className="date">{dateBuilder(new Date())}</div>
-            <div className="weather-box">
-              <div className="temp">{Math.round(weather.main.temp)}°C</div>
-              <div className="weather">Sunny</div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-        ;
-      </main>
-    </div>
-  );
+
+  return;
+  <div>
+    <TextField id="standard-basic" label="Standard" variant="standard" />
+  </div>;
 }
 
 export default App;
